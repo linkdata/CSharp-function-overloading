@@ -4,10 +4,12 @@
 
 Expose a single C# API taking a query string and zero or more optional parameters that has a return value that depends on the type parameter, and that can select different implementations for different kinds of types at compile time.
 
+You may not use the `dynamic` type. The implementation for `class` must be able to do `new T()`.
+
 The following four sets of type parameters must invoke four different implementations:
  * All non-nullable value types (`int, char, double...`)
  * The nullable string value type (`string`)
- * All class objects with a constructor (`class, new()`)
+ * All class objects with a default constructor (`class`)
  * A generic catch-all implementation that can handle `Nullable<T>`
    and also accepts any number of parameters.
 
