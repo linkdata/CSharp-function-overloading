@@ -6,7 +6,7 @@ Expose a single API taking a query string and zero or more optional parameters
 that has a return value that depends on the type parameter, and that can
 select different implementations for different kinds of types at compile time.
 
-The following type parameters must invoke different implementations:
+The following four sets of type parameters must invoke four different implementations:
  * All non-nullable value types (`int, char, double...`)
  * The nullable string value type (`string`)
  * All class objects with a constructor (`class, new()`)
