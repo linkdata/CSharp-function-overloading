@@ -5,6 +5,10 @@
     "emitEntryPoint": true
   },
   "dependencies": {
+    "System.Reflection.Emit": "4.0.1",
+    "System.Reflection.Emit.Lightweight": "4.0.1",
+    "System.Reflection.Emit.ILGeneration": "4.0.1",
+    "Microsoft.Extensions.DependencyInjection": "1.0.0",
     "System.Runtime": "4.1.0"
   },
   "frameworks": {

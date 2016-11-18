@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CSharpFunctionOverloading
 {
@@ -44,13 +46,13 @@ namespace CSharpFunctionOverloading
         }
 
         static public SQLResult<T> SQL<T>(QueryStringString<T> query)
-            where T: IComparable<string>
+            where T: class, IEnumerable<char>, IEnumerable, IComparable, IComparable<String>, IConvertible, IEquatable<String>
         {
             return HandleString<T>.Check(0);
         }
 
         static public SQLResult<T> SQL<T>(QueryStringString<T> query, object arg1)
-            where T: IComparable<string>
+            where T: class, IEnumerable<char>, IEnumerable, IComparable, IComparable<String>, IConvertible, IEquatable<String>
         {
             return HandleString<T>.Check(1);
         }

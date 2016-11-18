@@ -26,6 +26,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace CSharpFunctionOverloading
 {
@@ -42,7 +43,7 @@ namespace CSharpFunctionOverloading
         }
     }
 
-    public partial class Db
+    public static partial class Db
     {
         // Just here as a template of how the SQL() overloads can look.
         // Kept private so it doesn't interfere with the actual implementation.
@@ -52,8 +53,12 @@ namespace CSharpFunctionOverloading
         }
     }
 
-    public class Person : Db
+    public class Person
     {
+        public Person()
+        {
+            Console.WriteLine("Constructed a Person");
+        }
     }
 
     public class HandleValue<T>
@@ -79,15 +84,37 @@ namespace CSharpFunctionOverloading
     {
         static public SQLResult<T> Check(int paramCount)
         {
-            Debug.Assert(typeof(Db).IsAssignableFrom(typeof(T)));
+            Debug.Assert(typeof(Person).IsAssignableFrom(typeof(T)));
             return new SQLResult<T>() { Params = paramCount, Impl = "HandleClass" };
         }
     }
 
     public class HandleGeneric<T>
     {
+        public delegate object ObjectActivator();
+        
+        public static ObjectActivator CreateCtor(Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+            ConstructorInfo emptyConstructor = type.GetConstructor(Type.EmptyTypes);
+            var dynamicMethod = new DynamicMethod("CreateInstance", type, Type.EmptyTypes, true);
+            ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Newobj, emptyConstructor);
+            ilGenerator.Emit(OpCodes.Ret);
+            return (ObjectActivator)dynamicMethod.CreateDelegate(typeof(ObjectActivator));
+        }
+
+        static public ObjectActivator PersonCtor = CreateCtor(typeof(Person));
+
         static public SQLResult<T> Check(int paramCount)
         {
+            if (typeof(T) == typeof(Person))
+            {
+                object o = PersonCtor();
+            }
             return new SQLResult<T>() { Params = paramCount, Impl = "HandleGeneric" };
         }
     }
